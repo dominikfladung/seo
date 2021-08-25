@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Crawl Sitemap",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/sitemapChecker.py",
+            "console": "integratedTerminal",
+            "args": ["--sitemap", "http://fkt42.de/sitemap.xml"]
+        }
+    ]
+}
