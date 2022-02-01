@@ -19,8 +19,9 @@ class SEOHelper:
             raise Exception('checkHeadings', "More than one H1")
 
     def checkText2CodeRatio(self, parser):
-        if parser.htmlMetaData['text_to_code_ratio'] < 0.2:
-            raise Exception('checkText2CodeRatio', "TextToCode is more than 0.2")
+        if parser.htmlMetaData['text_to_code_ratio'] < 0.15:
+            text_to_code_ratio = round(parser.htmlMetaData['text_to_code_ratio'], 2)
+            raise Exception('checkText2CodeRatio', "TextToCodeRatio is " + str(text_to_code_ratio) + " and less than 0.15")
 
     def validate(self, parser):
         self.checkH1(parser)
@@ -34,15 +35,14 @@ class SEOHelper:
             if request.status_code == 200 or request.status_code == 301:
                 parser.feed(str(request.content))
                 self.validate(parser)
-                
-                print(f"{PrintStyles.OKGREEN} " + str(request.status_code) + " " + url + PrintStyles.ENDC)
+
+                if not self.args.only_errors:
+                    print(f"{PrintStyles.OKGREEN} " + " " + url + PrintStyles.ENDC)
                 return True
             else:
-                print(f"{PrintStyles.FAIL} !! " + str(request.status_code) + " " + url + " !!" + PrintStyles.ENDC)
-                return False
+                raise Exception("HTTP Response Code is " + str(request.status_code) + " and not 200 or 301")
         except Exception as e: 
-            print(e)
-            raise e
+            print(f"{PrintStyles.FAIL} " + " " + url + " " + str(e) + PrintStyles.ENDC)
             return False
 
     def getURLsFromSitemap(self, sitemapURI):
@@ -69,5 +69,4 @@ class SEOHelper:
             else:
                 errorCounter += 1
 
-            return
         print("Von " + str(okCounter + errorCounter) + " sind " + PrintStyles.OKGREEN + str(okCounter) +  PrintStyles.ENDC + " OK und " + PrintStyles.FAIL + str(errorCounter) + PrintStyles.ENDC + " mit Fehlern")    

@@ -8,7 +8,14 @@ class DocumentParser(HTMLParser):
     currentTag = None
     documentHelper = DocumentHelper()
 
+    def clear(self):
+        self.tagsDictionary = {}
+        self.htmlMetaData = {}
+        self.warnings = []
+        self.currentTag = None
+
     def feed(self, html):
+        self.clear()    
         self.htmlMetaData = self.documentHelper.getHTMLTextMetaData(html)
         super().feed(html)
 
